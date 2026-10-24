@@ -159,7 +159,11 @@ The committed reference test verifies all 744 January hours, the no-hindsight cu
 
 ## Deployment
 
-Deployment configuration is committed for a Vercel frontend and Render backend. Public URLs must be added here after the services are provisioned; no URL is fabricated in this repository.
+Deployment configuration is committed for a Vercel frontend and Render backend.
+
+- Backend API: <https://vdfcds.onrender.com>
+- API documentation: <https://vdfcds.onrender.com/docs>
+- Frontend: pending Vercel deployment
 
 ### 1. Create the Vercel project
 
