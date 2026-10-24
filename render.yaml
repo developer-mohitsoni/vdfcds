@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: windsight-uk-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: WINDSIGHT_SNAPSHOT_PATH
+        value: /app/data/processed/january-2026.v1.json
+      - key: WINDSIGHT_ALLOWED_ORIGINS
+        sync: false

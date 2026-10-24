@@ -1,7 +1,8 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       WINDSIGHT_ALLOWED_ORIGINS: '["http://localhost:3000","http://localhost:5173"]'
       WINDSIGHT_SNAPSHOT_PATH: /app/data/processed/january-2026.v1.json

@@ -7,11 +7,13 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir uv==0.9.26
 
-COPY pyproject.toml uv.lock ./
+COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY app ./app
+COPY backend/app ./app
+COPY data/processed/january-2026.v1.json ./data/processed/january-2026.v1.json
+COPY data/processed/january-2026.v1.provenance.json ./data/processed/january-2026.v1.provenance.json
 
 EXPOSE 8000
 
-CMD ["uv", "run", "--no-sync", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
