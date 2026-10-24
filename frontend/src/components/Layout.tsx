@@ -17,6 +17,14 @@ function BrandMark() {
 }
 
 export function Header({ status }: { status?: "ready" | "stale" }) {
+  const sections = [
+    ["Overview", "#overview"],
+    ["Performance", "#performance"],
+    ["Daily accuracy", "#daily-accuracy"],
+    ["Decision trail", "#decision-trail"],
+    ["Methodology", "#methodology"],
+  ];
+
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="WindSight UK home">
@@ -26,6 +34,9 @@ export function Header({ status }: { status?: "ready" | "stale" }) {
           <small>United Kingdom</small>
         </span>
       </a>
+      <nav className="section-nav" aria-label="Dashboard sections">
+        {sections.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
+      </nav>
       <div className={`data-badge ${status === "stale" ? "is-stale" : ""}`} role="status" aria-live="polite">
         <span className="pulse" />
         {status === "stale" ? "Snapshot needs refresh" : "Official data ready"}
@@ -86,13 +97,20 @@ export function KpiGrid({ metrics }: { metrics: Metrics }) {
     ["Data coverage", formatPercent(metrics.coveragePercent), `${metrics.completeHours} of ${metrics.expectedHours} hours`, "coverage"],
   ];
 
+  const [lead, ...supporting] = cards;
+
   return (
-    <section className="kpi-grid" aria-label="Forecast accuracy summary">
-      {cards.map(([label, value, note, tone]) => (
-        <article className={`kpi-card ${tone ? `kpi-${tone}` : ""}`} key={label}>
-          <p>{label}</p><strong>{value}</strong><span>{note}</span>
-        </article>
-      ))}
+    <section className="kpi-summary" aria-label="Forecast accuracy summary">
+      <article className="metric-lead">
+        <p>{lead[0]}</p><strong>{lead[1]}</strong><span>{lead[2]}</span>
+      </article>
+      <div className="metric-grid">
+        {supporting.map(([label, value, note, tone]) => (
+          <article className={`metric-item ${tone ? `metric-${tone}` : ""}`} key={label}>
+            <p>{label}</p><strong>{value}</strong><span>{note}</span>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -123,12 +141,12 @@ export function StatePanel({ type, onRetry }: { type: "empty" | "error"; onRetry
 
 export function Methodology() {
   return (
-    <section className="methodology">
-      <div><p className="section-index">Methodology</p><h2>Built for the decision that was actually possible.</h2></div>
+    <section className="methodology" id="methodology" aria-labelledby="methodology-title">
+      <div><h2 id="methodology-title">Built for the decision that was actually possible.</h2></div>
       <div className="method-grid">
-        <article><span>01</span><h3>Decision-time forecast</h3><p>Latest WINDFOR revision published by D-1 at 09:50 GMT—never hindsight.</p></article>
-        <article><span>02</span><h3>Comparable actuals</h3><p>Two FUELHH WIND half-hours averaged into each hourly observation.</p></article>
-        <article><span>03</span><h3>Honest gaps</h3><p>Missing observations stay missing and are excluded from accuracy metrics.</p></article>
+        <article><h3>Decision-time forecast</h3><p>Latest WINDFOR revision published by D-1 at 09:50 GMT—never hindsight.</p></article>
+        <article><h3>Comparable actuals</h3><p>Two FUELHH WIND half-hours averaged into each hourly observation.</p></article>
+        <article><h3>Honest gaps</h3><p>Missing observations stay missing and are excluded from accuracy metrics.</p></article>
       </div>
       <details>
         <summary>Limitations and interpretation</summary>

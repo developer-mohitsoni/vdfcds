@@ -35,9 +35,9 @@ export function EvolutionPanel({ points, selectedTime, onSelect }: { points: Tim
   }
 
   return (
-    <section className="panel evolution-panel">
+    <section className="panel evolution-panel" id="decision-trail" aria-labelledby="decision-trail-title">
       <div className="panel-heading">
-        <div><p className="section-index">03 / Decision trail</p><h2>Forecast evolution</h2><p>See what changed before—and after—the purchasing cutoff.</p></div>
+        <div><h2 id="decision-trail-title">Forecast evolution</h2><p>See what changed before—and after—the purchasing cutoff.</p></div>
         <div className="delivery-controls">
           <label className="delivery-select">
             <span>Delivery day</span>
@@ -64,13 +64,13 @@ export function EvolutionPanel({ points, selectedTime, onSelect }: { points: Tim
           <div className="evolution-chart">
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={data.revisions} margin={{ top: 20, right: 18, bottom: 8, left: 0 }}>
-                <CartesianGrid stroke="#dfe5df" strokeDasharray="2 6" vertical={false} />
+                <CartesianGrid stroke="#d8e2e4" strokeDasharray="2 6" vertical={false} />
                 <XAxis dataKey="publishTime" tickFormatter={(value: string) => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" }).format(new Date(value))} tickLine={false} axisLine={false} minTickGap={24} />
                 <YAxis width={42} tickLine={false} axisLine={false} />
                 <Tooltip labelFormatter={(value) => formatDateTime(typeof value === "string" ? value : null)} formatter={(value) => [formatMw(Number(value)), "Forecast"]} />
-                <ReferenceLine x={data.decisionCutoff} stroke="#d6843d" strokeDasharray="5 4" label={{ value: "09:50 cutoff", fill: "#9b5c27", position: "insideTopRight" }} />
-                <Line dataKey="generationMw" name="Forecast revision" stroke="#267b70" strokeWidth={2.5} dot={{ r: 3, fill: "#fff", strokeWidth: 2 }} isAnimationActive={false} />
-                {selectedRevision ? <ReferenceDot x={selectedRevision.publishTime} y={selectedRevision.generationMw} r={6} fill="#d6843d" stroke="#fff" strokeWidth={2} /> : null}
+                <ReferenceLine x={data.decisionCutoff} stroke="#e99138" strokeDasharray="5 4" label={{ value: "09:50 cutoff", fill: "#96551f", position: "insideTopRight" }} />
+                <Line dataKey="generationMw" name="Forecast revision" stroke="#0d8d84" strokeWidth={2.5} dot={{ r: 3, fill: "#fff", strokeWidth: 2 }} isAnimationActive={false} />
+                {selectedRevision ? <ReferenceDot x={selectedRevision.publishTime} y={selectedRevision.generationMw} r={6} fill="#e99138" stroke="#fff" strokeWidth={2} /> : null}
               </LineChart>
             </ResponsiveContainer>
           </div>

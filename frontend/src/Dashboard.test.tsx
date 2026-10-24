@@ -141,6 +141,18 @@ describe("WindSight dashboard", () => {
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
+  it("connects the evaluator overview to analytical evidence", async () => {
+    installSuccessfulApi();
+    render(<App />);
+    await screen.findByText("15 MW");
+
+    const navigation = screen.getByRole("navigation", { name: "Dashboard sections" });
+    expect(within(navigation).getByRole("link", { name: "Performance" })).toHaveAttribute("href", "#performance");
+    expect(within(navigation).getByRole("link", { name: "Decision trail" })).toHaveAttribute("href", "#decision-trail");
+    expect(screen.getByLabelText("Decision-time rule")).toHaveTextContent("D-1 · 09:50 GMT");
+    expect(screen.getByRole("region", { name: "Forecast performance" })).toHaveAttribute("id", "performance");
+  });
+
   it("explains an invalid draft date range", async () => {
     installSuccessfulApi();
     const user = userEvent.setup();

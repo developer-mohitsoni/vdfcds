@@ -37,10 +37,9 @@ export function ForecastChart({ points, selectedTime }: { points: TimeseriesPoin
   const lastPoint = points.at(-1);
 
   return (
-    <section className="panel chart-panel">
+    <section className="panel chart-panel" id="performance" aria-label="Forecast performance">
       <div className="panel-heading">
         <div>
-          <p className="section-index">01 / Performance</p>
           <h2>Forecast vs actual</h2>
           <p>Hourly wind generation available at the day-ahead decision point.</p>
         </div>
@@ -49,7 +48,7 @@ export function ForecastChart({ points, selectedTime }: { points: TimeseriesPoin
       <div className="chart-wrap" aria-label="Hourly forecast and actual wind generation chart">
         <ResponsiveContainer width="100%" height={360}>
           <LineChart data={points} margin={{ top: 16, right: 12, bottom: 4, left: 0 }}>
-            <CartesianGrid stroke="#dfe5df" strokeDasharray="2 6" vertical={false} />
+            <CartesianGrid stroke="#d8e2e4" strokeDasharray="2 6" vertical={false} />
             <XAxis
               dataKey="startTime"
               tickFormatter={(value: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(value))}
@@ -60,9 +59,9 @@ export function ForecastChart({ points, selectedTime }: { points: TimeseriesPoin
             <YAxis tickFormatter={(value: number) => `${Math.round(value / 1000)}k`} width={42} tickLine={false} axisLine={false} />
             <Tooltip content={<ForecastTooltip />} />
             <Legend iconType="plainline" />
-            {selectedTime ? <ReferenceLine x={selectedTime} stroke="#d6843d" strokeDasharray="4 4" /> : null}
-            <Line name="Forecast" dataKey="forecastMw" stroke="#267b70" strokeWidth={2.4} dot={false} activeDot={{ r: 5, fill: "#fff", strokeWidth: 3 }} connectNulls={false} isAnimationActive={false} />
-            <Line name="Actual" dataKey="actualMw" stroke="#22342f" strokeWidth={2.2} dot={false} activeDot={{ r: 5, fill: "#fff", strokeWidth: 3 }} connectNulls={false} isAnimationActive={false} />
+            {selectedTime ? <ReferenceLine x={selectedTime} stroke="#e99138" strokeDasharray="4 4" /> : null}
+            <Line name="Forecast" dataKey="forecastMw" stroke="#0d8d84" strokeWidth={2.5} dot={false} activeDot={{ r: 5, fill: "#fff", strokeWidth: 3 }} connectNulls={false} isAnimationActive={false} />
+            <Line name="Actual" dataKey="actualMw" stroke="#102c3a" strokeWidth={2.25} dot={false} activeDot={{ r: 5, fill: "#fff", strokeWidth: 3 }} connectNulls={false} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>

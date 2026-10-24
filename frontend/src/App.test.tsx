@@ -7,7 +7,8 @@ describe("App", () => {
   it("renders the product identity", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "Day-ahead wind, without hindsight." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "January wind forecast review" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "WindSight UK home" })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Dashboard sections" })).toBeInTheDocument();
   });
 });

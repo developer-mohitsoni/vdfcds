@@ -3,10 +3,10 @@ import { formatDate, formatLongDate, formatMw, formatPercent } from "../lib/form
 
 export function DailyTable({ days, onFocusDay }: { days: DailyMetric[]; onFocusDay: (date: string) => void }) {
   return (
-    <section className="panel table-panel">
+    <section className="panel table-panel" id="daily-accuracy" aria-labelledby="daily-title">
       <div className="panel-heading compact">
-        <div><p className="section-index">02 / Daily detail</p><h2>Accuracy by delivery day</h2></div>
-        <span className="table-hint">Choose a day for hourly detail</span>
+        <div><h2 id="daily-title">Accuracy by delivery day</h2></div>
+        <span className="table-hint">Scroll metrics · Focus day stays pinned</span>
       </div>
       <div className="table-scroll">
         <table>

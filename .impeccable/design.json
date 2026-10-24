@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "product": "WindSight UK",
+  "direction": "North Sea Forecast Briefing",
+  "audience": "Hiring evaluator",
+  "principles": [
+    "Lead with decision-time evidence",
+    "Make the no-hindsight cutoff explicit",
+    "Use hierarchy instead of repeated cards",
+    "Keep analytical interactions discoverable on mobile"
+  ],
+  "typography": {
+    "family": "IBM Plex Sans Variable",
+    "fallbacks": ["Segoe UI", "sans-serif"],
+    "headingWeight": "540-580",
+    "bodyWeight": "400",
+    "numericStyle": "tabular-nums"
+  },
+  "colors": {
+    "navy950": "#071a25",
+    "navy900": "#0b2330",
+    "navy800": "#123342",
+    "ink": "#102531",
+    "muted": "#52656d",
+    "fog": "#eaf0f1",
+    "paper": "#f8fbfa",
+    "white": "#ffffff",
+    "line": "#cdd9db",
+    "lineStrong": "#aebfc2",
+    "forecast": "#0d8d84",
+    "forecastBright": "#3bc1b1",
+    "forecastSoft": "#d8efeb",
+    "cutoff": "#e99138",
+    "cutoffSoft": "#f8e7d3",
+    "danger": "#a84f2e"
+  },
+  "shape": {
+    "panelRadiusPx": 14,
+    "controlRadiusPx": 8,
+    "minimumControlHeightPx": 44,
+    "contentMaxWidthPx": 1420
+  },
+  "breakpointsPx": {
+    "wide": 1180,
+    "tablet": 900,
+    "mobile": 640
+  },
+  "dataSemantics": {
+    "forecast": "wind teal",
+    "actual": "ink navy",
+    "cutoffAndRisk": "amber",
+    "ready": "bright wind teal"
+  },
+  "signature": {
+    "name": "No-hindsight cutoff",
+    "label": "D-1 · 09:50 GMT",
+    "treatment": "amber rule, marker, or bordered evidence strip"
+  },
+  "components": {
+    "metricSummary": "one teal lead MAE field plus a quieter secondary metric rail",
+    "chartPanel": "paper surface with sparse horizontal grid and semantic series colours",
+    "dailyTable": "dense comparison table with pinned Date and Focus day columns on narrow screens",
+    "decisionCard": "navy evidence surface showing selected revision, publication, cutoff, and actual",
+    "methodology": "navy closing section with plain descriptive headings"
+  },
+  "avoid": [
+    "decorative grid backgrounds",
+    "glassmorphism",
+    "gradient text",
+    "generic icon tiles",
+    "repeated uppercase eyebrow labels",
+    "decorative section numbering",
+    "equal-weight KPI cards",
+    "stock imagery"
+  ]
+}

@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  color: #172321;
-  background: #f3f1ea;
-  font-family: "Aptos", "Segoe UI Variable", sans-serif;
+  color: #102531;
+  background: #eaf0f1;
+  font-family: "IBM Plex Sans Variable", "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -18,11 +18,16 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  accent-color: #267b70;
+  accent-color: #0d8d84;
 }
 
 button,
 input,
 select {
   font: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
 }

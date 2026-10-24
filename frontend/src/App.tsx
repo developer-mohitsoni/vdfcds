@@ -53,20 +53,31 @@ function Dashboard() {
     <div className="app-shell" id="top">
       <Header status={overviewQuery.data?.dataStatus.status} />
       <main className="dashboard">
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">January 2026 · Great Britain</p>
-            <h1>Day-ahead wind, <em>without hindsight.</em></h1>
-            <p>Compare the forecast available at the purchasing deadline with what the grid actually produced.</p>
+        <section className="review-header" id="overview" aria-labelledby="review-title">
+          <div className="review-copy">
+            <h1 id="review-title">January wind forecast review</h1>
+            <p className="review-intro">How accurately did Great Britain’s day-ahead wind forecast describe the generation that followed?</p>
+            <div className="review-meta" aria-label="Review scope">
+              <span>January 2026</span>
+              <span>Great Britain</span>
+              <span>Elexon WINDFOR + FUELHH</span>
+            </div>
           </div>
-          <DateRangeControls
-            from={range.from}
-            to={range.to}
-            onApply={(from, to) => {
-              setFocusedDay(null);
-              setRange({ from, to });
-            }}
-          />
+          <div className="review-tools">
+            <div className="decision-rule" aria-label="Decision-time rule">
+              <span>No-hindsight cutoff</span>
+              <strong>D-1 · 09:50 GMT</strong>
+              <small>Latest forecast published before the purchasing decision.</small>
+            </div>
+            <DateRangeControls
+              from={range.from}
+              to={range.to}
+              onApply={(from, to) => {
+                setFocusedDay(null);
+                setRange({ from, to });
+              }}
+            />
+          </div>
         </section>
 
         {isLoading ? <LoadingState /> : null}
