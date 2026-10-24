@@ -163,7 +163,7 @@ Deployment configuration is committed for a Vercel frontend and Render backend.
 
 - Backend API: <https://vdfcds.onrender.com>
 - API documentation: <https://vdfcds.onrender.com/docs>
-- Frontend: pending Vercel deployment
+- Frontend: <https://windsight-uk.vercel.app>
 
 ### 1. Create the Vercel project
 
