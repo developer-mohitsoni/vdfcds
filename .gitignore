@@ -1,2 +1,27 @@
 .worktrees/
 
+# Frontend
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Backend
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local environment
+.env
+.env.local
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

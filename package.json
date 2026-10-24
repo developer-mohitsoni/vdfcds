@@ -1,0 +1,12 @@
+{
+  "name": "windsight-uk",
+  "private": true,
+  "packageManager": "pnpm@10.29.2",
+  "scripts": {
+    "dev": "pnpm --filter @windsight/frontend dev",
+    "build": "pnpm --filter @windsight/frontend build",
+    "lint": "pnpm --filter @windsight/frontend lint",
+    "test": "pnpm --filter @windsight/frontend test",
+    "typecheck": "pnpm --filter @windsight/frontend typecheck"
+  }
+}
