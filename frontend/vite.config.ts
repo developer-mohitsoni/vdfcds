@@ -3,6 +3,16 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          charts: ["recharts"],
+          react: ["react", "react-dom", "@tanstack/react-query"],
+        },
+      },
+    },
+  },
   server: {
     host: "0.0.0.0",
     port: 5173,
