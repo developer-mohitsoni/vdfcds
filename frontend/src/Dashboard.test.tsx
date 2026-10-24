@@ -81,7 +81,7 @@ function jsonResponse(body: unknown): Promise<Response> {
   } as Response);
 }
 
-function installSuccessfulApi(overrides?: { empty?: boolean }) {
+function installSuccessfulApi(overrides?: { empty?: boolean; evolutionError?: boolean }) {
   return vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
     if (url.includes("/overview")) {
@@ -110,6 +110,9 @@ function installSuccessfulApi(overrides?: { empty?: boolean }) {
       return jsonResponse(overrides?.empty ? { ...daily, days: [] } : daily);
     }
     if (url.includes("/forecast-evolution")) {
+      if (overrides?.evolutionError) {
+        return Promise.reject(new Error("Revision service unavailable"));
+      }
       return jsonResponse(evolution);
     }
     throw new Error(`Unexpected request: ${url}`);
@@ -134,7 +137,23 @@ describe("WindSight dashboard", () => {
     expect(await screen.findByText("15 MW")).toBeInTheDocument();
     expect(within(screen.getByLabelText("Forecast accuracy summary")).getByText("8.4%")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Forecast vs actual" })).toBeInTheDocument();
-    expect(screen.getByText("110 MW forecast, 100 MW actual")).toBeInTheDocument();
+    expect(screen.getByLabelText("Chart data summary")).toHaveTextContent("2 hourly observations");
+    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+  });
+
+  it("explains an invalid draft date range", async () => {
+    installSuccessfulApi();
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByText("15 MW");
+
+    await user.clear(screen.getByLabelText("From date"));
+    await user.type(screen.getByLabelText("From date"), "2026-01-02");
+    await user.clear(screen.getByLabelText("To date"));
+    await user.type(screen.getByLabelText("To date"), "2026-01-01");
+
+    expect(screen.getByText("From date must be on or before To date.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Apply date range" })).toBeDisabled();
   });
 
   it("applies a changed date range to API requests", async () => {
@@ -164,10 +183,15 @@ describe("WindSight dashboard", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(await screen.findByRole("button", { name: "Focus 2 January 2026" }));
+    await user.click(await screen.findByRole("button", { name: "Focus day — 2 January 2026" }));
 
     expect(screen.getByLabelText("From date")).toHaveValue("2026-01-02");
     expect(screen.getByLabelText("To date")).toHaveValue("2026-01-02");
+    expect(screen.getByRole("status", { name: "Active date filter" })).toHaveTextContent("2 January 2026");
+
+    await user.click(screen.getByRole("button", { name: "Back to January" }));
+    expect(screen.getByLabelText("From date")).toHaveValue("2026-01-01");
+    expect(screen.getByLabelText("To date")).toHaveValue("2026-01-31");
   });
 
   it("loads forecast evolution for the selected delivery hour", async () => {
@@ -175,8 +199,8 @@ describe("WindSight dashboard", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const select = await screen.findByLabelText("Delivery hour");
-    await user.selectOptions(select, "2026-01-02T00:00:00Z");
+    const daySelect = await screen.findByLabelText("Delivery day");
+    await user.selectOptions(daySelect, "2026-01-02");
 
     await waitFor(() =>
       expect(fetchMock).toHaveBeenCalledWith(
@@ -185,6 +209,31 @@ describe("WindSight dashboard", () => {
       ),
     );
     expect(await screen.findByText("Selected revision")).toBeInTheDocument();
+  });
+
+  it("steps through delivery hours without a long selector", async () => {
+    const fetchMock = installSuccessfulApi();
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(await screen.findByRole("button", { name: "Next delivery hour" }));
+
+    await waitFor(() =>
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("startTime=2026-01-02T00%3A00%3A00Z"),
+        expect.anything(),
+      ),
+    );
+  });
+
+  it("offers retry when revision history fails", async () => {
+    installSuccessfulApi({ evolutionError: true });
+    const user = userEvent.setup();
+    render(<App />);
+
+    const alert = await screen.findByRole("alert", { name: "Revision history error" });
+    expect(within(alert).getByText("Revision history is unavailable.")).toBeInTheDocument();
+    await user.click(within(alert).getByRole("button", { name: "Retry revision history" }));
   });
 
   it("shows a loading state while API requests are pending", () => {

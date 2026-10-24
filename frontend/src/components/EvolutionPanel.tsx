@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import {
   CartesianGrid,
   Line,
@@ -23,20 +24,41 @@ export function EvolutionPanel({ points, selectedTime, onSelect }: { points: Tim
   });
   const data = evolutionQuery.data;
   const selectedRevision = data?.revisions.find((revision) => revision.selected);
+  const selectedIndex = points.findIndex((point) => point.startTime === selectedTime);
+  const selectedDay = selectedTime?.slice(0, 10) ?? points[0]?.startTime.slice(0, 10) ?? "";
+  const days = useMemo(() => Array.from(new Set(points.map((point) => point.startTime.slice(0, 10)))), [points]);
+  const dayPoints = points.filter((point) => point.startTime.startsWith(selectedDay));
+
+  function selectDay(day: string) {
+    const firstPoint = points.find((point) => point.startTime.startsWith(day));
+    if (firstPoint) onSelect(firstPoint.startTime);
+  }
 
   return (
     <section className="panel evolution-panel">
       <div className="panel-heading">
         <div><p className="section-index">03 / Decision trail</p><h2>Forecast evolution</h2><p>See what changed before—and after—the purchasing cutoff.</p></div>
-        <label className="hour-select">
-          <span>Delivery hour</span>
-          <select aria-label="Delivery hour" value={selectedTime ?? ""} onChange={(event) => onSelect(event.target.value)}>
-            {points.map((point) => <option key={point.startTime} value={point.startTime}>{formatDateTime(point.startTime)}</option>)}
-          </select>
-        </label>
+        <div className="delivery-controls">
+          <label className="delivery-select">
+            <span>Delivery day</span>
+            <select aria-label="Delivery day" value={selectedDay} onChange={(event) => selectDay(event.target.value)}>
+              {days.map((day) => <option key={day} value={day}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${day}T00:00:00Z`))}</option>)}
+            </select>
+          </label>
+          <label className="delivery-select">
+            <span>Delivery hour</span>
+            <select aria-label="Delivery hour" value={selectedTime ?? ""} onChange={(event) => onSelect(event.target.value)}>
+              {dayPoints.map((point) => <option key={point.startTime} value={point.startTime}>{new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "UTC" }).format(new Date(point.startTime))} GMT</option>)}
+            </select>
+          </label>
+          <div className="hour-stepper">
+            <button type="button" aria-label="Previous delivery hour" disabled={selectedIndex <= 0} onClick={() => onSelect(points[selectedIndex - 1].startTime)}>Previous</button>
+            <button type="button" aria-label="Next delivery hour" disabled={selectedIndex < 0 || selectedIndex >= points.length - 1} onClick={() => onSelect(points[selectedIndex + 1].startTime)}>Next</button>
+          </div>
+        </div>
       </div>
-      {evolutionQuery.isPending ? <div className="inline-loading">Loading revision history…</div> : null}
-      {evolutionQuery.isError ? <div className="inline-error">Revision history is unavailable.</div> : null}
+      {evolutionQuery.isPending ? <div className="inline-loading" role="status">Loading revision history…</div> : null}
+      {evolutionQuery.isError ? <div className="inline-error" role="alert" aria-label="Revision history error"><span>Revision history is unavailable.</span><button type="button" onClick={() => void evolutionQuery.refetch()}>Retry revision history</button></div> : null}
       {data ? (
         <div className="evolution-grid">
           <div className="evolution-chart">

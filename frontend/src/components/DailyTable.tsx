@@ -6,7 +6,7 @@ export function DailyTable({ days, onFocusDay }: { days: DailyMetric[]; onFocusD
     <section className="panel table-panel">
       <div className="panel-heading compact">
         <div><p className="section-index">02 / Daily detail</p><h2>Accuracy by delivery day</h2></div>
-        <span className="table-hint">Select a row to focus</span>
+        <span className="table-hint">Choose a day for hourly detail</span>
       </div>
       <div className="table-scroll">
         <table>
@@ -19,7 +19,7 @@ export function DailyTable({ days, onFocusDay }: { days: DailyMetric[]; onFocusD
                 <td className={day.metrics.meanBiasMw && day.metrics.meanBiasMw > 0 ? "positive" : "negative"}>{formatMw(day.metrics.meanBiasMw)}</td>
                 <td>{formatPercent(day.metrics.wapePercent)}</td>
                 <td>{formatPercent(day.metrics.coveragePercent)}</td>
-                <td><button className="row-action" type="button" aria-label={`Focus ${formatLongDate(day.date)}`} onClick={() => onFocusDay(day.date)}>↗</button></td>
+                <td><button className="row-action" type="button" aria-label={`Focus day — ${formatLongDate(day.date)}`} onClick={() => onFocusDay(day.date)}>Focus day</button></td>
               </tr>
             ))}
           </tbody>

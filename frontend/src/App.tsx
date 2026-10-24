@@ -15,9 +15,11 @@ import {
   Methodology,
   StatePanel,
 } from "./components/Layout";
+import { formatLongDate } from "./lib/format";
 
 function Dashboard() {
   const [range, setRange] = useState({ from: JANUARY_START, to: JANUARY_END });
+  const [focusedDay, setFocusedDay] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const queryKey = [range.from, range.to];
   const overviewQuery = useQuery({
@@ -57,7 +59,14 @@ function Dashboard() {
             <h1>Day-ahead wind, <em>without hindsight.</em></h1>
             <p>Compare the forecast available at the purchasing deadline with what the grid actually produced.</p>
           </div>
-          <DateRangeControls from={range.from} to={range.to} onApply={(from, to) => setRange({ from, to })} />
+          <DateRangeControls
+            from={range.from}
+            to={range.to}
+            onApply={(from, to) => {
+              setFocusedDay(null);
+              setRange({ from, to });
+            }}
+          />
         </section>
 
         {isLoading ? <LoadingState /> : null}
@@ -66,9 +75,29 @@ function Dashboard() {
           points.length === 0 ? <StatePanel type="empty" /> : (
             <div className="dashboard-content">
               {overviewQuery.data.dataStatus.status === "stale" ? <div className="stale-banner" role="status">This snapshot predates the complete reporting window. Refresh the Elexon data before relying on it.</div> : null}
+              {focusedDay ? (
+                <div className="focus-banner" role="status" aria-label="Active date filter">
+                  <span>Focused on <strong>{formatLongDate(focusedDay)}</strong></span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFocusedDay(null);
+                      setRange({ from: JANUARY_START, to: JANUARY_END });
+                    }}
+                  >
+                    Back to January
+                  </button>
+                </div>
+              ) : null}
               <KpiGrid metrics={overviewQuery.data.metrics} />
               <ForecastChart points={points} selectedTime={selectedTime} />
-              <DailyTable days={dailyQuery.data.days} onFocusDay={(date) => setRange({ from: date, to: date })} />
+              <DailyTable
+                days={dailyQuery.data.days}
+                onFocusDay={(date) => {
+                  setFocusedDay(date);
+                  setRange({ from: date, to: date });
+                }}
+              />
               <EvolutionPanel points={points} selectedTime={selectedTime} onSelect={setSelectedTime} />
               <Methodology />
             </div>

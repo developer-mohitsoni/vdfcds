@@ -32,6 +32,10 @@ function ForecastTooltip({ active, payload }: { active?: boolean; payload?: Tool
 }
 
 export function ForecastChart({ points, selectedTime }: { points: TimeseriesPoint[]; selectedTime: string | null }) {
+  const selectedPoint = points.find((point) => point.startTime === selectedTime);
+  const firstPoint = points[0];
+  const lastPoint = points.at(-1);
+
   return (
     <section className="panel chart-panel">
       <div className="panel-heading">
@@ -62,9 +66,10 @@ export function ForecastChart({ points, selectedTime }: { points: TimeseriesPoin
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <ul className="sr-only" aria-label="Chart data summary">
-        {points.map((point) => <li key={point.startTime}>{formatMw(point.forecastMw)} forecast, {formatMw(point.actualMw)} actual</li>)}
-      </ul>
+      <p className="sr-only" aria-label="Chart data summary">
+        {points.length} hourly observations from {formatDateTime(firstPoint?.startTime ?? null)} to {formatDateTime(lastPoint?.startTime ?? null)}.
+        {selectedPoint ? ` Selected hour: ${formatMw(selectedPoint.forecastMw)} forecast, ${formatMw(selectedPoint.actualMw)} actual, ${formatMw(selectedPoint.errorMw)} error.` : ""}
+      </p>
     </section>
   );
 }

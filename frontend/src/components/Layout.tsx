@@ -26,7 +26,7 @@ export function Header({ status }: { status?: "ready" | "stale" }) {
           <small>United Kingdom</small>
         </span>
       </a>
-      <div className={`data-badge ${status === "stale" ? "is-stale" : ""}`}>
+      <div className={`data-badge ${status === "stale" ? "is-stale" : ""}`} role="status" aria-live="polite">
         <span className="pulse" />
         {status === "stale" ? "Snapshot needs refresh" : "Official data ready"}
       </div>
@@ -51,6 +51,8 @@ export function DateRangeControls({
     setDraftTo(to);
   }, [from, to]);
 
+  const isInvalidRange = Boolean(draftFrom && draftTo && draftFrom > draftTo);
+
   return (
     <form
       className="date-controls"
@@ -61,25 +63,26 @@ export function DateRangeControls({
     >
       <label>
         <span>From date</span>
-        <input aria-label="From date" type="date" min={JANUARY_START} max={JANUARY_END} value={draftFrom} onChange={(event) => setDraftFrom(event.target.value)} />
+        <input aria-label="From date" aria-describedby={isInvalidRange ? "date-range-error" : undefined} type="date" min={JANUARY_START} max={JANUARY_END} value={draftFrom} onChange={(event) => setDraftFrom(event.target.value)} />
       </label>
       <span className="date-separator" aria-hidden="true">→</span>
       <label>
         <span>To date</span>
-        <input aria-label="To date" type="date" min={JANUARY_START} max={JANUARY_END} value={draftTo} onChange={(event) => setDraftTo(event.target.value)} />
+        <input aria-label="To date" aria-describedby={isInvalidRange ? "date-range-error" : undefined} type="date" min={JANUARY_START} max={JANUARY_END} value={draftTo} onChange={(event) => setDraftTo(event.target.value)} />
       </label>
-      <button type="submit" disabled={!draftFrom || !draftTo || draftFrom > draftTo}>Apply date range</button>
+      {isInvalidRange ? <p className="date-error" id="date-range-error" role="alert">From date must be on or before To date.</p> : null}
+      <button type="submit" disabled={!draftFrom || !draftTo || isInvalidRange}>Apply date range</button>
     </form>
   );
 }
 
 export function KpiGrid({ metrics }: { metrics: Metrics }) {
   const cards = [
-    ["Mean absolute error", formatMw(metrics.maeMw), "Typical miss per hour", "primary"],
-    ["Root mean square error", formatMw(metrics.rmseMw), "Penalises large misses", ""],
-    ["Mean bias", formatMw(metrics.meanBiasMw), metrics.meanBiasMw !== null && metrics.meanBiasMw > 0 ? "Net over-forecast" : "Net under-forecast", metrics.meanBiasMw !== null && metrics.meanBiasMw > 0 ? "risk" : ""],
-    ["WAPE", formatPercent(metrics.wapePercent), "Error vs actual volume", ""],
-    ["P90 absolute error", formatMw(metrics.p90AbsoluteErrorMw), "Nine in ten hours below", ""],
+    ["Mean absolute error", formatMw(metrics.maeMw), "Average size of the hourly miss", "primary"],
+    ["Root mean square error", formatMw(metrics.rmseMw), "Typical miss, weighted toward large errors", ""],
+    ["Mean bias", formatMw(metrics.meanBiasMw), metrics.meanBiasMw !== null && metrics.meanBiasMw > 0 ? "Average signed error · over-forecast" : "Average signed error · under-forecast", metrics.meanBiasMw !== null && metrics.meanBiasMw > 0 ? "risk" : ""],
+    ["WAPE", formatPercent(metrics.wapePercent), "Absolute error as a share of actual output", ""],
+    ["P90 absolute error", formatMw(metrics.p90AbsoluteErrorMw), "90% of hourly misses are below this", ""],
     ["Data coverage", formatPercent(metrics.coveragePercent), `${metrics.completeHours} of ${metrics.expectedHours} hours`, "coverage"],
   ];
 
@@ -96,7 +99,7 @@ export function KpiGrid({ metrics }: { metrics: Metrics }) {
 
 export function LoadingState() {
   return (
-    <div className="loading-layout" data-testid="dashboard-loading" aria-label="Loading dashboard">
+    <div className="loading-layout" data-testid="dashboard-loading" role="status" aria-label="Loading dashboard">
       <div className="skeleton hero-skeleton" />
       <div className="skeleton-row">{Array.from({ length: 6 }, (_, index) => <div className="skeleton card-skeleton" key={index} />)}</div>
       <div className="skeleton chart-skeleton" />
