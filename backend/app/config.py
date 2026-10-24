@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     )
 
     allowed_origins: list[str] = ["http://localhost:5173"]
-    snapshot_path: Path = Path("../data/processed/january-2026.json")
+    snapshot_path: Path = Path("../data/processed/january-2026.v1.json")
 
 
 @lru_cache

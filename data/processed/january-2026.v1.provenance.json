@@ -1,0 +1,9 @@
+{
+  "snapshotFile": "january-2026.v1.json",
+  "sha256": "df6f4b0a4b7d0407b14882a284865cd47a4284f4b1d0754a8c36d0f556cf2e46",
+  "generatedAt": "2026-10-24T11:06:15.507037Z",
+  "sourceUrls": [
+    "https://data.elexon.co.uk/bmrs/api/v1/datasets/WINDFOR/stream",
+    "https://data.elexon.co.uk/bmrs/api/v1/datasets/FUELHH/stream"
+  ]
+}
