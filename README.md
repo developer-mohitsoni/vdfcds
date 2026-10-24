@@ -198,7 +198,3 @@ The backend CORS configuration intentionally allows only the deployed production
 ## AI-tool disclosure
 
 This challenge was developed with AI-assisted engineering using OpenAI Codex. AI assistance was used for planning, implementation, test authoring, UI critique, verification workflows, and documentation. The resulting code and analytical decisions were reviewed against the acceptance criteria and validated with automated tests, linting, type checking, production builds, Docker smoke tests, and browser inspection.
-
-## License
-
-This repository is provided as a hiring-challenge submission. No separate open-source license has been granted.
