@@ -157,6 +157,10 @@ docker compose down
 
 The committed reference test verifies all 744 January hours, the no-hindsight cutoff, snapshot integrity, complete coverage, and known metric baselines.
 
+## Demo video
+
+Watch the complete project walkthrough: [WindSight UK — Full-Stack Software Engineer Challenge](https://youtu.be/Zh_A8KevDu0)
+
 ## Deployment
 
 Deployment configuration is committed for a Vercel frontend and Render backend.
